@@ -196,7 +196,7 @@ def main():
     print("Experiment completed")
 
     # =========================
-    # Convergence Plot
+    # Plot & Animation
     # =========================
 
     plt.figure(figsize=(12,6))
@@ -212,6 +212,51 @@ def main():
     plt.grid(True)
 
     plt.savefig("results/convergence.png")
+    plt.show()
+
+    for (act_name, opt_name), model in trained_models.items():
+    
+        model.eval()
+    
+        x_vals = torch.linspace(0,1,100).view(-1,1).to(device)
+        t_vals = torch.linspace(0,1,100).view(-1,1).to(device)
+    
+        U = np.zeros((len(t_vals), len(x_vals)))
+    
+        for i, t in enumerate(t_vals):
+            t_grid = t.repeat(len(x_vals),1)
+            u_pred = model(x_vals, t_grid).detach().cpu().numpy()
+            U[i,:] = u_pred[:,0]
+        
+            plt.figure(figsize=(8,6))
+            plt.imshow(U, extent=[0,1,0,1], origin='lower', aspect='auto', cmap='hot')
+            plt.colorbar(label='u(x,t)')
+            plt.xlabel('x')
+            plt.ylabel('t')
+            plt.title(f'Heatmap: {act_name} activation + {opt_name} optimizer')
+            plt.show()
+
+    # MSE Comparison
+    activ_opt_labels = [f'{act}-{opt}' for (act,opt) in results.keys()]
+    mse_values = [res['mse'] for res in results.values()]
+    
+    plt.figure(figsize=(10,5))
+    plt.bar(activ_opt_labels, mse_values, color='skyblue')
+    plt.xticks(rotation=45)
+    plt.ylabel('MSE (averaged over time slices)')
+    plt.title('MSE Comparison Across Activation Functions and Optimizers')
+    plt.grid(axis='y')
+    plt.show()
+    
+    # Max Error Comparison
+    max_err_values = [res['max_err'] for res in results.values()]
+    
+    plt.figure(figsize=(10,5))
+    plt.bar(activ_opt_labels, max_err_values, color='salmon')
+    plt.xticks(rotation=45)
+    plt.ylabel('Max Error (over time slices)')
+    plt.title('Max Error Comparison Across Activation Functions and Optimizers')
+    plt.grid(axis='y')
     plt.show()
 
 
