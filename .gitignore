@@ -1,0 +1,22 @@
+# Python cache files
+__pycache__/
+*.pyc
+
+# Virtual environments
+.env/
+venv/
+
+# Python package info
+*.egg-info/
+
+# Data, results, models
+results/
+*.log
+*.csv
+*.h5
+*.pt
+*.pth
+
+# OS-specific files
+.DS_Store
+Thumbs.db
