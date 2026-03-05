@@ -24,8 +24,8 @@ u(x,0) = sin(πx)
 
 Boundary conditions:
 
-- Left boundary: u(0,t) = cos(t)  
-- Right boundary: u(1,t) = cos(t)
+- Left boundary: u(0,t) = 0
+- Right boundary: u(1,t) = 0
 
 
 ## Method and Study Design
