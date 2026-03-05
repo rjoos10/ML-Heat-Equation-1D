@@ -73,7 +73,7 @@ This setup allows a focused study on activation functions and optimizers while k
   - Max Error and MSE are comparable between Tanh and Sin, but Sin tends to have slightly larger errors for both Adam and SGD optimizers. ReLU appears numerically strong but is not reliable due to non-physical behavior shown in the heatmap results.
 
 - **Optimizers:**  
-  - Adam achieves lower total loss compared to SGD. However, sudden peaks are present.  
+  - Adam achieves lower total loss compared to SGD. However, sudden peaks are present, likely due to its adaptive learning rate and gradient-based updates.
   - SGD converges faster initially but stabilizes at higher loss values, indicating less accurate solutions.
   - In all cases the Adam optimizer gives a higher Max error and MSE value compared to SGD.
   - These results show that optimizer choice significantly impacts PINN performance, sometimes more than activation function choice.
