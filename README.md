@@ -51,8 +51,8 @@ This architecture was chosen to balance:
 
 ### Evaluation Metrics
 
-- Mean Squared Error (MSE) at t = 0.25, 0.5, 0.75, 1.0  
-- Maximum absolute error across the spatial domain  
+- Mean Squared Error (MSE) averaged over the times t = 0.25, 0.5, 0.75, 1.0  
+- Maximum absolute error across the spatial domain averaged over the times t = 0.25, 0.5, 0.75, 1.0 
 - Training convergence behavior over epochs  
 
 This setup allows a focused study on activation functions and optimizers while keeping the network architecture fixed.
@@ -65,39 +65,32 @@ This setup allows a focused study on activation functions and optimizers while k
 - Predictions were evaluated at fixed time slices (t=0,0.25,0.5,0.75,1.0) to compare against the analytical solution.  
 
 
-## Results - DOUBLE CHECK
+## Results
 
-- **Activation functions:**  
-  - Tanh and Sin achieved lower errors and smoother approximations of the PDE solution.  
-  - ReLU performed worse due to its non-smooth nature, which limits accurate second derivatives.  
+- **Activation Functions:**  
+  - Tanh generally achieves slightly lower MSE and Max Error compared to Sin, especially with the Adam optimizer, likely due to smoother derivatives better capturing the PDE solution.  
+  - Tanh and Sin show similar total loss trends over time with the same optimizer, while ReLU shows lower total loss.
+  - Max Error and MSE are comparable between Tanh and Sin, but Sin tends to have slightly larger errors for both Adam and SGD optimizers. ReLU appears numerically strong but is not reliable due to non-physical behavior shown in the heatmap results.
 
 - **Optimizers:**  
-  - Adam consistently converged faster than SGD and reached lower final losses.  
+  - Adam achieves lower total loss compared to SGD. However, sudden peaks are present.  
+  - SGD converges faster initially but stabilizes at higher loss values, indicating less accurate solutions.
+  - In all cases the Adam optimizer gives a higher Max error and MSE value compared to SGD.
+  - These results show that optimizer choice significantly impacts PINN performance, sometimes more than activation function choice.
 
 - **Visualization:**  
-  - Convergence curves show differences in training stability across experiments.  
-  - Heatmaps illustrate the temporal evolution of temperature along the rod, confirming the network captures the expected behavior.
+  - Convergence curves differentiate training stability:  
+    - SGD converges early but to higher loss values.  
+    - Adam reaches lower loss but may show mild oscillations or peaks.  
+    - ReLU shows low numerical loss but fails physically when looking at the heatmaps.
+  - Heatmaps confirm Tanh and Sin with the Adam optimizer correctly capture the temporal evolution of temperature along the rod.  
+  - SGD produces asymmetries in the solution, highlighting its limitations, despite lower MSE and Max error values.  
+  - ReLU heatmaps do not match expected physical behavior, so despite low Max Error or MSE and total loss, it is not suitable for this PDE.
 
+## Conclusion
 
-## Conclusion - DOUBLE CHECK
+- **Activation functions:** Smooth activations (Tanh, Sin) are better suited for PDEs requiring accurate higher-order derivatives. Tanh slightly outperforms Sin in MSE, Max Error, and total loss when combined with Adam.  
+- **Optimizer choice:** Adam provides more stable training and lower total loss. SGD converges early but often to less accurate solutions.  
+- **Numerical metrics vs. physical realism:** ReLU may produce low Max Error or MSE but fails to capture the correct solution, emphasizing the need for visual evaluation.  
+- **Overall insight:** Both activation function and optimizer significantly affect PINN performance. For the heat equation problem studied, Tanh with the Adam optimizer provides the most accurate and physically realistic solution.
 
-The experiments confirm the hypothesis:
-
-- Smooth activations (Tanh, Sin) are better suited for PDEs requiring higher-order derivatives.  
-- Adam outperforms SGD in convergence speed.  
-
-This study demonstrates that activation function and optimizer selection significantly affect PINN performance, even when network architecture is fixed.
-
-
-## How to Run
-
-1. Install dependencies:
-
-```bash
-pip install -r requirements.txt
-
-2, Train the model
-python train.py
-
-3. Visualise Results
-python visualise.py
