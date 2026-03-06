@@ -11,7 +11,6 @@ optimizers to analyze their impact on solution accuracy and convergence.
 
 
 ## Problem Description
-
 We solve the 1D heat equation:
 
 u_t = α u_xx
@@ -24,8 +23,21 @@ u(x,0) = sin(πx)
 
 Boundary conditions:
 
-- Left boundary: u(0,t) = 0
-- Right boundary: u(1,t) = 0
+- Left boundary: u(0,t) = 0  
+- Right boundary: u(1,t) = 0  
+
+### Analytical Solution
+
+For this problem, the analytical solution is known and is given by:
+
+u(x,t) = e^{-π²t} sin(πx)
+
+This closed-form solution is used to evaluate the accuracy of the Physics-Informed Neural Network by computing:
+
+- Mean Squared Error (MSE)
+- Maximum Absolute Error
+
+between the predicted solution and the analytical solution at several time slices.
 
 
 ## Method and Study Design
@@ -62,7 +74,7 @@ This setup allows a focused study on activation functions and optimizers while k
 
 - Each combination of activation function and optimizer was trained for 5000 epochs.  
 - Random collocation points were sampled for the PDE residual calculation.  
-- Predictions were evaluated at fixed time slices (t=0,0.25,0.5,0.75,1.0) to compare against the analytical solution.  
+- Errors were evaluated at fixed time slices (t=0,0.25,0.5,0.75,1.0).  
 
 
 ## Results
@@ -73,16 +85,12 @@ This setup allows a focused study on activation functions and optimizers while k
   - Max Error and MSE are comparable between Tanh and Sin, but Sin tends to have slightly larger errors for both Adam and SGD optimizers. ReLU appears numerically strong but is not reliable due to non-physical behavior shown in the heatmap results.
 
 - **Optimizers:**  
-  - Adam achieves lower total loss compared to SGD. However, sudden peaks are present, likely due to its adaptive learning rate and gradient-based updates.
+  - Adam achieves lower total loss compared to SGD for all activation functions. However, sudden peaks are present, likely due to its adaptive learning rate and gradient-based updates.
   - SGD converges faster initially but stabilizes at higher loss values, indicating less accurate solutions.
   - In all cases the Adam optimizer gives a higher Max error and MSE value compared to SGD.
   - These results show that optimizer choice significantly impacts PINN performance, sometimes more than activation function choice.
 
 - **Visualization:**  
-  - Convergence curves differentiate training stability:  
-    - SGD converges early but to higher loss values.  
-    - Adam reaches lower loss but may show mild oscillations or peaks.  
-    - ReLU shows low numerical loss but fails physically when looking at the heatmaps.
   - Heatmaps confirm Tanh and Sin with the Adam optimizer correctly capture the temporal evolution of temperature along the rod.  
   - SGD produces asymmetries in the solution, highlighting its limitations, despite lower MSE and Max error values.  
   - ReLU heatmaps do not match expected physical behavior, so despite low Max Error or MSE and total loss, it is not suitable for this PDE.
