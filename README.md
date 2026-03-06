@@ -28,9 +28,9 @@ Boundary conditions:
 
 ### Analytical Solution
 
-For this problem, the analytical solution is known and is given by, where L = 1:
+For this problem, the analytical solution is known and is given by, since L = 1:
 
-u(x,t) = e^{-(π/L)²t} sin(πx/L) = e^{-π²t} sin(πx)
+u(x,t) = e^{-απ²t} sin(πx)
 
 This closed-form solution is used to evaluate the accuracy of the Physics-Informed Neural Network by computing:
 
